@@ -23,7 +23,7 @@ public class Template implements HttpHandler {
         Map<String, String> usersPass = new HashMap<>();
         usersPass.put("user", "user");
         usersPass.put("admin", "admin");
-        usersPass.put("haslo", "maslo");
+        usersPass.put("haslo", "adminPassword");
 
         // client's address
         String userAgent = httpExchange.getRequestHeaders().getFirst("User-agent");

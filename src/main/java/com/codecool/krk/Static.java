@@ -17,23 +17,47 @@ public class Static implements HttpHandler {
 
         // get file path from url
         URI uri = httpExchange.getRequestURI();
+        System.out.println("uri = " + uri);
         System.out.println("looking for: " + uri.getPath());
+
         String path = "." + uri.getPath();
+        System.out.println("uri.getPath() = " + uri.getPath());
 
         // get file from resources folder, see: https://www.mkyong.com/java/java-read-a-file-from-resources-folder/
         ClassLoader classLoader = getClass().getClassLoader();
-        URL fileURL = classLoader.getResource(path);
+        System.out.println("classLoader = " + classLoader);
 
-        OutputStream os = httpExchange.getResponseBody();
+        URL fileURL = classLoader.getResource(path);
+        System.out.println("fileURL = " + fileURL);
+
+        String newPath = "/codecool_logo_high.png";
+        URL concatUrl = new URL(fileURL.toExternalForm() + newPath);
+        System.out.println("concat URL = " + concatUrl);
+
+//        OutputStream os = httpExchange.getResponseBody();
+
+        URL fileURLOfLogo = classLoader.getResource("codecool_logo_high.png");
+        System.out.println("fileURLOFLogo = " + fileURLOfLogo);
 
         if (fileURL == null) {
             // Object does not exist or is not a file: reject with 404 error.
             send404(httpExchange);
         } else {
             // Object exists and is a file: accept with response code 200.
-            sendFile(httpExchange, fileURL);
+//            sendFile(httpExchange, fileURL);
+            sendFile(httpExchange, concatUrl);
         }
 
+    }
+
+    private File getFileFromResources(String filename) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resoruce = classLoader.getResource(filename);
+        if (resoruce == null) {
+            throw new IllegalArgumentException("file is not found!");
+        } else {
+            return new File(resoruce.getFile());
+        }
     }
 
     private void send404(HttpExchange httpExchange) throws IOException {
